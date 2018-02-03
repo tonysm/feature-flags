@@ -2,11 +2,11 @@
 
 namespace Tests\Feature;
 
+use Mockery;
+use Tests\TestCase;
 use App\FeatureFlag;
 use App\FeatureFlags\FeatureFlags;
 use App\FeatureFlags\FeatureFlagsRepository;
-use Mockery;
-use Tests\TestCase;
 
 class ListFeatureFlagsTest extends TestCase
 {

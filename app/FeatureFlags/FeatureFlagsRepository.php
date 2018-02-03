@@ -13,6 +13,6 @@ class FeatureFlagsRepository
 
     public function all()
     {
-        return FeatureFlags::all();
+        return FeatureFlag::all();
     }
 }

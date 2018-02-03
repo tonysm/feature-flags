@@ -20,7 +20,7 @@
 
                 <ul class="list-group mb-3">
                     <li class="list-group-item text-center lh-condensed py-4" v-if="flags.length === 0">
-                        No flags registed yet.
+                        {{ loading ? 'Loading...' : 'No flags registed yet.' }}
                     </li>
                     <li class="list-group-item d-flex justify-content-between lh-condensed" v-for="flag in flags" :key="flag.id">
                         <div>
@@ -118,6 +118,7 @@
         <b-modal
             v-model="showNewFlagModal"
             cancel-variant="default"
+            @ok="createFeatureFlag"
         >
             <span slot="modal-ok">Save</span>
             <span slot="modal-cancel">Close</span>
@@ -128,11 +129,11 @@
                 <form>
                     <div class="form-group">
                         <label for="flag">Flag</label>
-                        <input type="text" class="form-control" id="flag" aria-describedby="flagHelp" placeholder="EXAMPLE_FLAG" />
+                        <input type="text" class="form-control" id="flag" v-model="newFlag.flag" aria-describedby="flagHelp" placeholder="EXAMPLE_FLAG" />
                     </div>
                     <div class="form-group">
                         <label for="shortDescription">Short Description</label>
-                        <input type="text" class="form-control" id="shortDescription" placeholder="Lorem ipsum." />
+                        <input type="text" v-model="newFlag.description" class="form-control" id="shortDescription" placeholder="Lorem ipsum." />
                     </div>
                     <div class="form-group">
                         <div class="">
@@ -157,24 +158,8 @@
                 showToggleConfirmationModal: false,
                 showNewFlagModal: false,
                 toggling: null,
-                flags: [
-                    {
-                        id: 1,
-                        flag: 'SOMETHING_ELSE',
-                        description: 'Lorem ipsum',
-                        value: true,
-                        bypass: false,
-                        rules: [],
-                    },
-                    {
-                        id: 2,
-                        flag: 'LOREM_IPSUM',
-                        description: 'Lorem ipsum dolor',
-                        value: false,
-                        bypass: false,
-                        rules: [],
-                    }
-                ],
+                loading: false,
+                flags: [],
                 bypassing: null,
                 newFlag: {
                     flag: '',
@@ -201,8 +186,21 @@
             cancelByPassingFlag () {
                 this.bypassing = null;
             },
+            createFeatureFlag () {
+                axios.post('/feature-flags/flags', this.newFlag)
+                    .then(({data}) => {
+                        this.flags.push(data);
+                    });
+            }
         },
         mounted() {
+            this.loading = true;
+
+            axios.get('/feature-flags/flags')
+                .then(({data}) => {
+                    this.flags = data;
+                    this.loading = false;
+                });
         }
     }
 </script>

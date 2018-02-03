@@ -15,6 +15,11 @@ class FeatureFlagsController extends Controller
      */
     private $featureFlagRepository;
 
+    /**
+     * FeatureFlagsController constructor.
+     *
+     * @param FeatureFlagsRepository $featureFlagRepository
+     */
     public function __construct(FeatureFlagsRepository $featureFlagRepository)
     {
         parent::__construct();
@@ -22,6 +27,9 @@ class FeatureFlagsController extends Controller
         $this->featureFlagRepository = $featureFlagRepository;
     }
 
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function index()
     {
         $featureFlags = $this->featureFlagRepository->all();
@@ -36,20 +44,16 @@ class FeatureFlagsController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
+        $data = $this->validate($request, [
             'flag' => [
                 'required',
                 'string',
             ],
             'value' => 'required|boolean',
-            'description' => 'string',
+            'description' => 'string|nullable',
         ]);
 
-        $flag = new FeatureFlag([
-            'flag' => $request->flag,
-            'description' => $request->description,
-            'value' => $request->value,
-        ]);
+        $flag = new FeatureFlag($data);
 
         $this->featureFlagRepository->save($flag);
 

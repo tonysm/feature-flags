@@ -17,7 +17,7 @@ class CreateFeatureFlagsTable extends Migration
             $table->increments('id');
             $table->string('flag');
             $table->boolean('value');
-            $table->string('description');
+            $table->string('description')->nullable();
             $table->timestamps();
         });
     }

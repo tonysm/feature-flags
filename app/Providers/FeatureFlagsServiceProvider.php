@@ -16,7 +16,7 @@ class FeatureFlagsServiceProvider extends ServiceProvider
     {
         FeatureFlags::routes();
 
-//        FeatureFlags::authUsing(function () {
+//        FeatureFlags::authUsing(function ($request) {
 //            return true;
 //        });
     }

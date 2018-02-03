@@ -6,9 +6,29 @@ use App\FeatureFlag;
 use Illuminate\Http\Request;
 use App\Events\FlagWasCreated;
 use App\Http\Controllers\Controller;
+use App\FeatureFlags\FeatureFlagsRepository;
 
 class FeatureFlagsController extends Controller
 {
+    /**
+     * @var \App\FeatureFlags\FeatureFlagsRepository
+     */
+    private $featureFlagRepository;
+
+    public function __construct(FeatureFlagsRepository $featureFlagRepository)
+    {
+        parent::__construct();
+
+        $this->featureFlagRepository = $featureFlagRepository;
+    }
+
+    public function index()
+    {
+        $featureFlags = $this->featureFlagRepository->all();
+
+        return response()->json($featureFlags);
+    }
+
     /**
      * @param \Illuminate\Http\Request $request
      *
@@ -25,11 +45,13 @@ class FeatureFlagsController extends Controller
             'description' => 'string',
         ]);
 
-        $flag = FeatureFlag::create([
+        $flag = new FeatureFlag([
             'flag' => $request->flag,
             'description' => $request->description,
             'value' => $request->value,
         ]);
+
+        $this->featureFlagRepository->save($flag);
 
         event(new FlagWasCreated($flag));
 

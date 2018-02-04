@@ -18,6 +18,7 @@ class CreateFeatureFlagsTable extends Migration
             $table->string('flag');
             $table->boolean('value');
             $table->string('description')->nullable();
+            $table->json('bypass_ids')->nullable();
             $table->timestamps();
         });
     }

@@ -2,6 +2,7 @@
 
 namespace App\FeatureFlags;
 
+use Exception;
 use Illuminate\Support\Facades\Route;
 
 class FeatureFlags
@@ -52,5 +53,23 @@ class FeatureFlags
         return (static::$auth ?: function () {
             return app()->environment('local');
         })($request);
+    }
+
+    /**
+     * @param string $connectionKey
+     *
+     * @throws Exception
+     */
+    public static function use($connectionKey)
+    {
+        if (is_null($config = config("database.redis.{$connectionKey}"))) {
+            throw new Exception("Redis connection [{$connectionKey}] has not been configured.");
+        }
+
+        config(['database.redis.feature-flags' => array_merge($config, [
+            'options' => [
+                'prefix' => config('feature-flags.prefix') ?: 'feature-flags:',
+            ],
+        ])]);
     }
 }

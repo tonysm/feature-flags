@@ -9,7 +9,7 @@ class FeatureFlagsServiceProvider extends ServiceProvider
 {
     public function register()
     {
-
+        FeatureFlags::use(config('feature-flags.use'));
     }
 
     public function boot()

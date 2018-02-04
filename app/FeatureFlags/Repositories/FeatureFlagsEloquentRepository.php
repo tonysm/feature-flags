@@ -21,4 +21,16 @@ class FeatureFlagsEloquentRepository implements FeatureFlagsRepository
     {
         $featureFlag->update($data);
     }
+
+    public function disable(FeatureFlag $flag)
+    {
+        $flag->update([
+            'value' => false,
+        ]);
+    }
+
+    public function findById($id)
+    {
+        return FeatureFlag::find($id);
+    }
 }

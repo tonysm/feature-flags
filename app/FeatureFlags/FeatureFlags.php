@@ -23,6 +23,7 @@ class FeatureFlags
             Route::get('/', 'DashboardController@index');
 
             Route::resource('flags', 'FeatureFlagsController')->only(['index', 'store', 'update']);
+            Route::resource('disabled-flags', 'DisabledFlagsController')->only(['store']);
         });
     }
 

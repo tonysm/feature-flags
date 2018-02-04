@@ -13,6 +13,7 @@ class FeatureFlag extends Model
 
     protected $casts = [
         'bypass_ids' => 'array',
+        'value' => 'boolean',
     ];
 
     public function checker() : Checkers\Checker

@@ -9,3 +9,9 @@ $factory->define(App\FeatureFlag::class, function (Faker $faker) {
         'description' => $faker->sentence,
     ];
 });
+
+$factory->state(App\FeatureFlag::class, 'disabled', function () {
+    return [
+        'value' => false,
+    ];
+});

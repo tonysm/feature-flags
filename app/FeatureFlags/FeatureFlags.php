@@ -24,6 +24,7 @@ class FeatureFlags
 
             Route::resource('flags', 'FeatureFlagsController')->only(['index', 'store', 'update']);
             Route::resource('disabled-flags', 'DisabledFlagsController')->only(['store']);
+            Route::resource('enabled-flags', 'EnabledFlagsController')->only(['store']);
         });
     }
 

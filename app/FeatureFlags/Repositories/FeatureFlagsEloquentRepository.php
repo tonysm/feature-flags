@@ -33,4 +33,11 @@ class FeatureFlagsEloquentRepository implements FeatureFlagsRepository
     {
         return FeatureFlag::find($id);
     }
+
+    public function reenable(FeatureFlag $flag)
+    {
+        $flag->update([
+            'value' => true,
+        ]);
+    }
 }

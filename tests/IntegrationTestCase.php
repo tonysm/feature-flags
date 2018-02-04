@@ -15,8 +15,8 @@ class IntegrationTestCase extends TestCase
 
     public function tearDown()
     {
-        parent::tearDown();
-
         Redis::flushall();
+
+        parent::tearDown();
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\FeatureFlags\FeatureFlags;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -13,7 +14,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        FeatureFlags::routes();
+
+//        FeatureFlags::authUsing(function ($request) {
+//            return true;
+//        });
     }
 
     /**

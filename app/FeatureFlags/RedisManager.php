@@ -6,7 +6,7 @@ use App\FeatureFlag;
 use App\FeatureFlags\Checkers;
 use Illuminate\Contracts\Redis\Factory;
 
-class FeatureFlagsRedisManager
+class RedisManager
 {
     /**
      * @var Factory

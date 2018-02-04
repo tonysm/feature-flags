@@ -5,11 +5,14 @@ namespace Tests\Integration;
 use App\FeatureFlag;
 use App\FeatureFlags\Checkers;
 use Tests\IntegrationTestCase;
+use App\FeatureFlags\RedisManager;
 use Illuminate\Support\Facades\Redis;
-use App\FeatureFlags\FeatureFlagsRedisManager;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class CachesFeatureFlagsTest extends IntegrationTestCase
 {
+    use DatabaseMigrations;
+
     public function testCanCacheEnabledFlag()
     {
         $featureFlag = factory(FeatureFlag::class)->create([
@@ -17,7 +20,7 @@ class CachesFeatureFlagsTest extends IntegrationTestCase
             'value' => true,
         ]);
 
-        $repository = resolve(FeatureFlagsRedisManager::class);
+        $repository = resolve(RedisManager::class);
 
         $repository->save($featureFlag);
 
@@ -32,7 +35,7 @@ class CachesFeatureFlagsTest extends IntegrationTestCase
             'value' => false,
         ]);
 
-        $repository = resolve(FeatureFlagsRedisManager::class);
+        $repository = resolve(RedisManager::class);
 
         $repository->save($featureFlag);
 
@@ -47,7 +50,7 @@ class CachesFeatureFlagsTest extends IntegrationTestCase
             'bypass_ids' => [123, 321],
         ]);
 
-        $repository = resolve(FeatureFlagsRedisManager::class);
+        $repository = resolve(RedisManager::class);
 
         $repository->save($featureFlag);
 
@@ -62,7 +65,7 @@ class CachesFeatureFlagsTest extends IntegrationTestCase
             'bypass_ids' => [123, 312],
         ]);
 
-        $repository = resolve(FeatureFlagsRedisManager::class);
+        $repository = resolve(RedisManager::class);
         $repository->save($featureFlag);
 
         $featureFlag->update([
@@ -77,7 +80,7 @@ class CachesFeatureFlagsTest extends IntegrationTestCase
 
     public function testGetsFeatureDisabledWhenNoFlagNotFoundOnRedis()
     {
-        $repository = resolve(FeatureFlagsRedisManager::class);
+        $repository = resolve(RedisManager::class);
 
         $this->assertInstanceOf(Checkers\FeatureDisabled::class, $repository->getCheckerForFlag('LOREM'));
     }
@@ -89,7 +92,7 @@ class CachesFeatureFlagsTest extends IntegrationTestCase
             'value' => true,
         ]);
 
-        $repository = resolve(FeatureFlagsRedisManager::class);
+        $repository = resolve(RedisManager::class);
         $repository->save($featureFlag);
 
         $this->assertInstanceOf(Checkers\FeatureEnabled::class, $repository->getCheckerForFlag('LOREM'));
@@ -103,7 +106,7 @@ class CachesFeatureFlagsTest extends IntegrationTestCase
             'bypass_ids' => [123, 321],
         ]);
 
-        $repository = resolve(FeatureFlagsRedisManager::class);
+        $repository = resolve(RedisManager::class);
         $repository->save($featureFlag);
 
         $this->assertInstanceOf(Checkers\FeatureByPass::class, $repository->getCheckerForFlag('LOREM'));

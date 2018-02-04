@@ -5,7 +5,7 @@ namespace App\FeatureFlags;
 use App\FeatureFlag;
 use Illuminate\Contracts\Redis\Factory;
 
-class FeatureFlagsManager
+class FeatureFlagsRedisManager
 {
     /**
      * @var Factory

@@ -5,7 +5,7 @@ namespace Tests\Integration;
 use App\FeatureFlag;
 use Tests\IntegrationTestCase;
 use Illuminate\Support\Facades\Redis;
-use App\FeatureFlags\FeatureFlagsManager;
+use App\FeatureFlags\FeatureFlagsRedisManager;
 
 class CachesFeatureFlagsTest extends IntegrationTestCase
 {
@@ -16,7 +16,7 @@ class CachesFeatureFlagsTest extends IntegrationTestCase
             'value' => true,
         ]);
 
-        $repository = resolve(FeatureFlagsManager::class);
+        $repository = resolve(FeatureFlagsRedisManager::class);
 
         $repository->save($featureFlag);
 
@@ -31,7 +31,7 @@ class CachesFeatureFlagsTest extends IntegrationTestCase
             'value' => false,
         ]);
 
-        $repository = resolve(FeatureFlagsManager::class);
+        $repository = resolve(FeatureFlagsRedisManager::class);
 
         $repository->save($featureFlag);
 
@@ -46,7 +46,7 @@ class CachesFeatureFlagsTest extends IntegrationTestCase
             'bypass_ids' => [123, 321],
         ]);
 
-        $repository = resolve(FeatureFlagsManager::class);
+        $repository = resolve(FeatureFlagsRedisManager::class);
 
         $repository->save($featureFlag);
 
@@ -61,7 +61,7 @@ class CachesFeatureFlagsTest extends IntegrationTestCase
             'bypass_ids' => [123, 312],
         ]);
 
-        $repository = resolve(FeatureFlagsManager::class);
+        $repository = resolve(FeatureFlagsRedisManager::class);
         $repository->save($featureFlag);
 
         $featureFlag->update([

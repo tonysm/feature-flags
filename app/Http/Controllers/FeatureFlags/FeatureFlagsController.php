@@ -7,21 +7,21 @@ use Illuminate\Http\Request;
 use App\Events\FlagWasCreated;
 use App\Http\Controllers\Controller;
 use App\Events\FlagByPassRulesWereUpdated;
-use App\FeatureFlags\FeatureFlagsRepository;
+use App\FeatureFlags\Repositories\FeatureFlagsEloquentRepository;
 
 class FeatureFlagsController extends Controller
 {
     /**
-     * @var \App\FeatureFlags\FeatureFlagsRepository
+     * @var \App\FeatureFlags\Repositories\FeatureFlagsEloquentRepository
      */
     private $featureFlagRepository;
 
     /**
      * FeatureFlagsController constructor.
      *
-     * @param FeatureFlagsRepository $featureFlagRepository
+     * @param FeatureFlagsEloquentRepository $featureFlagRepository
      */
-    public function __construct(FeatureFlagsRepository $featureFlagRepository)
+    public function __construct(FeatureFlagsEloquentRepository $featureFlagRepository)
     {
         parent::__construct();
 

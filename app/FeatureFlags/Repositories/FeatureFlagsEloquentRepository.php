@@ -1,17 +1,18 @@
 <?php
 
-namespace App\FeatureFlags;
+namespace App\FeatureFlags\Repositories;
 
 use App\FeatureFlag;
+use Illuminate\Database\Eloquent\Collection;
 
-class FeatureFlagsRepository
+class FeatureFlagsEloquentRepository implements FeatureFlagsRepository
 {
     public function save(FeatureFlag $featureFlag)
     {
         $featureFlag->save();
     }
 
-    public function all()
+    public function all(): Collection
     {
         return FeatureFlag::all();
     }

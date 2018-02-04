@@ -2,11 +2,12 @@
 
 namespace Tests\Feature;
 
+use Illuminate\Database\Eloquent\Collection;
 use Mockery;
 use Tests\TestCase;
 use App\FeatureFlag;
 use App\FeatureFlags\FeatureFlags;
-use App\FeatureFlags\FeatureFlagsRepository;
+use App\FeatureFlags\Repositories\FeatureFlagsEloquentRepository;
 
 class ListFeatureFlagsTest extends TestCase
 {
@@ -31,12 +32,12 @@ class ListFeatureFlagsTest extends TestCase
         $flag = new FeatureFlag();
         $flag->id = 123;
 
-        $repository = Mockery::mock(FeatureFlagsRepository::class);
+        $repository = Mockery::mock(FeatureFlagsEloquentRepository::class);
         $repository->shouldReceive('all')
             ->once()
-            ->andReturn([$flag]);
+            ->andReturn(new Collection([$flag]));
 
-        app()->instance(FeatureFlagsRepository::class, $repository);
+        app()->instance(FeatureFlagsEloquentRepository::class, $repository);
 
         $response = $this->getJson('feature-flags/flags');
 

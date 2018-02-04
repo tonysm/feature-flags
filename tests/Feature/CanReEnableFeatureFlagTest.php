@@ -50,4 +50,27 @@ class CanReEnableFeatureFlagTest extends TestCase
             return $event->flag->is($featureFlag);
         });
     }
+
+    public function testCannotReEnableWithoutAccepting()
+    {
+        $featureFlag = factory(FeatureFlag::class)->states(['disabled'])->create();
+
+        $response = $this->postJson(route('enabled-flags.store'), [
+            'feature_flag_id' => $featureFlag->getKey(),
+        ]);
+
+        $response->assertStatus(422);
+
+        $this->assertFalse($featureFlag->refresh()->value);
+    }
+
+    public function testCannotReEnableWithUnknownFeatureFlagId()
+    {
+        $response = $this->postJson(route('enabled-flags.store'), [
+            'feature_flag_id' => 123,
+            'confirmed' => '1',
+        ]);
+
+        $response->assertStatus(422);
+    }
 }

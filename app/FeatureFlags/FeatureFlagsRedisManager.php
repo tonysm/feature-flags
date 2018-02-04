@@ -3,6 +3,7 @@
 namespace App\FeatureFlags;
 
 use App\FeatureFlag;
+use App\FeatureFlags\Checkers;
 use Illuminate\Contracts\Redis\Factory;
 
 class FeatureFlagsRedisManager
@@ -42,6 +43,30 @@ class FeatureFlagsRedisManager
         } else {
             $this->connection()->del($flag->flag. ':allowed_ids');
         }
+    }
+
+    public function getCheckerForFlag($key)
+    {
+        if ($this->isEnabled($key)) {
+            return new Checkers\FeatureEnabled();
+        }
+
+        if ($byPassIds = $this->getByPassFor($key)) {
+            return new Checkers\FeatureByPass(ByPassRules::fromArray(['bypass_ids' => $byPassIds]));
+        }
+
+        return new Checkers\FeatureDisabled();
+    }
+
+    private function getByPassFor($key)
+    {
+        return $this->connection()
+            ->hgetall("$key:allowed_ids") ?: [];
+    }
+
+    private function isEnabled($key)
+    {
+        return !! $this->connection()->hget("$key", "value");
     }
 
     /**

@@ -32,6 +32,16 @@ class ByPassRules
     }
 
     /**
+     * @param array $data
+     *
+     * @return static
+     */
+    public static function fromArray(array $data)
+    {
+        return new static($data['bypass_ids']);
+    }
+
+    /**
      * @param $id
      *
      * @return bool

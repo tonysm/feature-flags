@@ -3,6 +3,7 @@
 namespace Tests\Integration;
 
 use App\FeatureFlag;
+use App\FeatureFlags\Checkers;
 use Tests\IntegrationTestCase;
 use Illuminate\Support\Facades\Redis;
 use App\FeatureFlags\FeatureFlagsRedisManager;
@@ -72,5 +73,39 @@ class CachesFeatureFlagsTest extends IntegrationTestCase
 
         $this->assertTrue(!!Redis::exists('feature-flags:LOREM'));
         $this->assertEquals([], Redis::hgetall('feature-flags:LOREM:allowed_ids'));
+    }
+
+    public function testGetsFeatureDisabledWhenNoFlagNotFoundOnRedis()
+    {
+        $repository = resolve(FeatureFlagsRedisManager::class);
+
+        $this->assertInstanceOf(Checkers\FeatureDisabled::class, $repository->getCheckerForFlag('LOREM'));
+    }
+
+    public function testGetsFeatureEnabledFromRedis()
+    {
+        $featureFlag = factory(FeatureFlag::class)->create([
+            'flag' => 'LOREM',
+            'value' => true,
+        ]);
+
+        $repository = resolve(FeatureFlagsRedisManager::class);
+        $repository->save($featureFlag);
+
+        $this->assertInstanceOf(Checkers\FeatureEnabled::class, $repository->getCheckerForFlag('LOREM'));
+    }
+
+    public function testGetsByPassWhenFeatureDisabledByPassRegistered()
+    {
+        $featureFlag = factory(FeatureFlag::class)->create([
+            'flag' => 'LOREM',
+            'value' => false,
+            'bypass_ids' => [123, 321],
+        ]);
+
+        $repository = resolve(FeatureFlagsRedisManager::class);
+        $repository->save($featureFlag);
+
+        $this->assertInstanceOf(Checkers\FeatureByPass::class, $repository->getCheckerForFlag('LOREM'));
     }
 }

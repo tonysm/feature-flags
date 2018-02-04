@@ -6,6 +6,7 @@ use App\FeatureFlag;
 use Illuminate\Http\Request;
 use App\Events\FlagWasCreated;
 use App\Http\Controllers\Controller;
+use App\Events\FlagByPassRulesWereUpdated;
 use App\FeatureFlags\FeatureFlagsRepository;
 
 class FeatureFlagsController extends Controller
@@ -60,5 +61,26 @@ class FeatureFlagsController extends Controller
         event(new FlagWasCreated($flag));
 
         return response()->json($flag, 201);
+    }
+
+    /**
+     * @param Request $request
+     * @param FeatureFlag $flag
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function update(Request $request, FeatureFlag $flag)
+    {
+        $data = $this->validate($request, [
+            'bypass_ids.*' => [
+                'numeric',
+            ],
+        ]);
+
+        $this->featureFlagRepository->update($flag, $data);
+
+        event(new FlagByPassRulesWereUpdated($flag));
+
+        return response()->json($flag, 200);
     }
 }

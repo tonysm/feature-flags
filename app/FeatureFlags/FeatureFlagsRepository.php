@@ -15,4 +15,9 @@ class FeatureFlagsRepository
     {
         return FeatureFlag::all();
     }
+
+    public function update(FeatureFlag $featureFlag, array $data)
+    {
+        $featureFlag->update($data);
+    }
 }

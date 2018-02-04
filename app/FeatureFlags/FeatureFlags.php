@@ -22,7 +22,7 @@ class FeatureFlags
         Route::group($options, function () {
             Route::get('/', 'DashboardController@index');
 
-            Route::resource('flags', 'FeatureFlagsController')->only(['index', 'store']);
+            Route::resource('flags', 'FeatureFlagsController')->only(['index', 'store', 'update']);
         });
     }
 

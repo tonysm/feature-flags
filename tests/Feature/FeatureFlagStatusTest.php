@@ -2,11 +2,11 @@
 
 namespace Tests\Feature;
 
-use App\Events\FlagWasDisabled;
-use App\FeatureFlags\FeatureFlags;
-use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
 use App\FeatureFlag;
+use App\FeatureFlags\FeatureFlags;
+use Illuminate\Support\Facades\Event;
+use App\FeatureFlags\Events\FlagWasDisabled;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class FeatureFlagStatusTest extends TestCase

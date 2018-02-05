@@ -2,11 +2,11 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Database\Eloquent\Collection;
 use Mockery;
 use Tests\TestCase;
 use App\FeatureFlag;
 use App\FeatureFlags\FeatureFlags;
+use Illuminate\Database\Eloquent\Collection;
 use App\FeatureFlags\Repositories\FeatureFlagsEloquentRepository;
 
 class ListFeatureFlagsTest extends TestCase

@@ -3,10 +3,9 @@
 namespace App\Http\Controllers\FeatureFlags;
 
 use App\FeatureFlag;
+use App\FeatureFlags\Events;
 use Illuminate\Http\Request;
-use App\Events\FlagWasCreated;
 use App\Http\Controllers\Controller;
-use App\Events\FlagByPassRulesWereUpdated;
 use App\FeatureFlags\Repositories\FeatureFlagsEloquentRepository;
 
 class FeatureFlagsController extends Controller
@@ -59,7 +58,7 @@ class FeatureFlagsController extends Controller
 
         $this->featureFlagRepository->save($flag);
 
-        event(new FlagWasCreated($flag));
+        event(new Events\FlagWasCreated($flag));
 
         return response()->json($flag, 201);
     }
@@ -80,7 +79,7 @@ class FeatureFlagsController extends Controller
 
         $this->featureFlagRepository->update($flag, $data);
 
-        event(new FlagByPassRulesWereUpdated($flag));
+        event(new Events\FlagByPassRulesWereUpdated($flag));
 
         return response()->json($flag, 200);
     }

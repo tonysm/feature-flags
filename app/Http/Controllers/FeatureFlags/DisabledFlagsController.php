@@ -4,8 +4,8 @@ namespace App\Http\Controllers\FeatureFlags;
 
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use App\Events\FlagWasDisabled;
 use App\Http\Controllers\Controller;
+use App\FeatureFlags\Events\FlagWasDisabled;
 use App\FeatureFlags\Repositories\FeatureFlagsEloquentRepository;
 
 class DisabledFlagsController extends Controller

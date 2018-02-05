@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Events;
+namespace App\FeatureFlags\Events;
 
 use App\FeatureFlag;
 use Illuminate\Queue\SerializesModels;

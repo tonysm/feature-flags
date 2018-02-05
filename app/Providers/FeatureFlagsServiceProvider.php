@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Events;
+use App\FeatureFlags\Events;
 use App\FeatureFlags\Listeners;
 use App\FeatureFlags\FeatureFlags;
 use Illuminate\Support\Facades\Event;

@@ -6,8 +6,8 @@ use Tests\TestCase;
 use App\FeatureFlag;
 use App\FeatureFlags\FeatureFlags;
 use Illuminate\Support\Facades\Event;
-use App\Events\FlagByPassRulesWereUpdated;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\FeatureFlags\Events\FlagByPassRulesWereUpdated;
 
 class AddByPassRuleToFeatureFlagsTest extends TestCase
 {

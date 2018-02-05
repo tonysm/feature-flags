@@ -4,9 +4,9 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use App\FeatureFlag;
-use App\Events\FlagWasReEnabled;
 use App\FeatureFlags\FeatureFlags;
 use Illuminate\Support\Facades\Event;
+use App\FeatureFlags\Events\FlagWasReEnabled;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class CanReEnableFeatureFlagTest extends TestCase

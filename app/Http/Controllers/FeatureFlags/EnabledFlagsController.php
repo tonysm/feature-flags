@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\FeatureFlags;
 
-use App\Events\FlagWasReEnabled;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
+use App\FeatureFlags\Events\FlagWasReEnabled;
 use App\FeatureFlags\Repositories\FeatureFlagsEloquentRepository;
 
 class EnabledFlagsController extends Controller

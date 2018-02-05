@@ -49,6 +49,7 @@ class FeatureFlagsController extends Controller
             'flag' => [
                 'required',
                 'string',
+                'unique:feature_flags,flag',
             ],
             'value' => 'required|boolean',
             'description' => 'string|nullable',

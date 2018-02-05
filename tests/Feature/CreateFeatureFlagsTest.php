@@ -90,4 +90,20 @@ class CreateFeatureFlagsTest extends TestCase
         $response->assertStatus(422);
         $this->assertCount(0, FeatureFlag::all());
     }
+
+    public function testCannotDuplicateFeatureFlag()
+    {
+        factory(FeatureFlag::class)->create([
+            'flag' => 'SOMETHING',
+        ]);
+
+        $response = $this->postJson('/feature-flags/flags', [
+            'flag' => 'SOMETHING',
+            'description' => 'Lorem Ipsum',
+            'value' => false,
+        ]);
+
+        $response->assertStatus(422);
+        $this->assertCount(1, FeatureFlag::all());
+    }
 }

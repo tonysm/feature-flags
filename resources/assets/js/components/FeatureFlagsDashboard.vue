@@ -129,7 +129,7 @@
                 <form>
                     <div class="form-group">
                         <label for="flag">Flag</label>
-                        <input type="text" class="form-control" id="flag" v-model="newFlag.flag" aria-describedby="flagHelp" placeholder="EXAMPLE_FLAG" />
+                        <input type="text" class="form-control" id="flag" :value="newFlag.flag" @input="(e) => newFlag.flag = e.target.value.toUpperCase()" aria-describedby="flagHelp" placeholder="EXAMPLE_FLAG" />
                     </div>
                     <div class="form-group">
                         <label for="shortDescription">Short Description</label>

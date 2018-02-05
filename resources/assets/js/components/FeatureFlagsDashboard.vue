@@ -57,23 +57,6 @@
             </div>
         </div>
         <b-modal
-            v-model="toggling"
-            @hidden="cancelToggleOfFlag"
-            @ok="confirmToggleOfFlag"
-        >
-            <span slot="modal-title">
-                Toggle Feature Confirmation
-            </span>
-            <div v-if="toggling">
-                <p class="alert alert-warning">
-                    <strong>Warning!</strong>
-                </p>
-                <p>
-                    You are about to <strong>{{ toggling.value ? 'disable' : 'enable' }}</strong> the feature flag: {{ toggling.flag }}.
-                </p>
-            </div>
-        </b-modal>
-        <b-modal
                 v-model="bypassing"
                 @hidden="cancelByPassingFlag"
                 @ok="confirmByPassingFlag"
@@ -210,12 +193,6 @@
                     feature_flag_id: flag.id,
                     confirmation: 1,
                 });
-            },
-            confirmToggleOfFlag () {
-                this.toggling.value = !this.toggling.value;
-            },
-            cancelToggleOfFlag () {
-                this.toggling = null;
             },
             showByPassConfirmationModal (flag) {
                 this.bypassing = flag;

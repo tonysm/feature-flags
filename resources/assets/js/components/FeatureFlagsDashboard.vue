@@ -29,7 +29,11 @@
                         </div>
                         <div class="d-flex justify-content-between">
                             <div class="mx-2 mt-2">
-                                <toggle-button :value="flag.value"/>
+                                <toggle-button
+                                    v-model="flag.value"
+                                    @change="toggleFlag(flag)"
+                                    :sync="true"
+                                />
                             </div>
 
                             <button
@@ -62,7 +66,7 @@
             </span>
             <div v-if="toggling">
                 <p class="alert alert-warning">
-                    <strong>Warning!</strong> As this might affect users of your application, are you sure you want to do this?
+                    <strong>Warning!</strong>
                 </p>
                 <p>
                     You are about to <strong>{{ toggling.value ? 'disable' : 'enable' }}</strong> the feature flag: {{ toggling.flag }}.
@@ -152,6 +156,8 @@
 </template>
 
 <script>
+    import swal from 'sweetalert';
+
     export default {
         data () {
             return {
@@ -171,6 +177,39 @@
             };
         },
         methods: {
+            toggleFlag (flag) {
+                swal({
+                    title: "Are you sure?",
+                    text: "As this might affect users of your application, are you sure you want to do this?",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                    .then((willToggle) => {
+                        if (willToggle) {
+                            this.sendToggleRequest(flag)
+                                .catch(() => {
+                                    flag.value = !flag.value;
+                                })
+                        } else {
+                            flag.value = !flag.value;
+                        }
+                    });
+            },
+            sendToggleRequest(flag) {
+                // The toggle button changes the value before it calls the on-change handler.
+                if (!flag.value) {
+                    return axios.post('/feature-flags/disabled-flags', {
+                        feature_flag_id: flag.id,
+                        confirmation: 1
+                    });
+                }
+
+                return axios.post('/feature-flags/enabled-flags', {
+                    feature_flag_id: flag.id,
+                    confirmation: 1,
+                });
+            },
             confirmToggleOfFlag () {
                 this.toggling.value = !this.toggling.value;
             },

@@ -21,6 +21,7 @@
     },
     "dependencies": {
         "bootstrap-vue": "^2.0.0-rc.1",
+        "sweetalert": "^2.1.0",
         "vue-js-toggle-button": "^1.2.2"
     }
 }

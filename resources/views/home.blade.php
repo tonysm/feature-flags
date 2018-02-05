@@ -15,6 +15,7 @@
                     @endif
 
                     You are logged in!
+                        <br> Your ID: {{ auth()->id() }}
                 </div>
 
                 <div class="card-body">

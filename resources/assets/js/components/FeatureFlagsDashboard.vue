@@ -39,17 +39,9 @@
                             <button
                                 class="btn btn-sm m-2"
                                 title="Create bypass rules."
-                                @click="() => {
-                                    showByPassConfirmationModal(flag);
-                                }"
+                                @click="showByPassConfirmationModal(flag)"
                             >
                                 <svg width="15" height="15" class="octicon octicon-shield" viewBox="0 0 14 16" version="1.1" aria-hidden="true"><path fill-rule="evenodd" d="M7 0L0 2v6.02C0 12.69 5.31 16 7 16c1.69 0 7-3.31 7-7.98V2L7 0zM5 11l1.14-2.8a.568.568 0 0 0-.25-.59C5.33 7.25 5 6.66 5 6c0-1.09.89-2 1.98-2C8.06 4 9 4.91 9 6c0 .66-.33 1.25-.89 1.61-.19.13-.3.36-.25.59L9 11H5z"></path></svg>
-                            </button>
-                            <button
-                                class="btn btn-sm m-2"
-                                title="Archive it."
-                            >
-                                <svg width="15" height="15" class="octicon octicon-trashcan" viewBox="0 0 12 16" version="1.1" aria-hidden="true"><path fill-rule="evenodd" d="M11 2H9c0-.55-.45-1-1-1H5c-.55 0-1 .45-1 1H2c-.55 0-1 .45-1 1v1c0 .55.45 1 1 1v9c0 .55.45 1 1 1h7c.55 0 1-.45 1-1V5c.55 0 1-.45 1-1V3c0-.55-.45-1-1-1zm-1 12H3V5h1v8h1V5h1v8h1V5h1v8h1V5h1v9zm1-10H2V3h9v1z"></path></svg>
                             </button>
                         </div>
                     </li>
@@ -57,9 +49,9 @@
             </div>
         </div>
         <b-modal
-                v-model="bypassing"
-                @hidden="cancelByPassingFlag"
-                @ok="confirmByPassingFlag"
+                :visible="bypassing !== null"
+                @hidden="hideByPassingModal"
+                @ok="hideByPassingModal"
                 :ok-only="true"
                 ok-variant="default"
         >
@@ -78,10 +70,17 @@
                         <div class="form-row align-items-center">
                             <div class="col-sm-4 my-1">
                                 <label class="sr-only" >Allow ID</label>
-                                <input type="text" class="form-control" placeholder="Example: 123" />
+                                <input type="text" class="form-control" v-model="newByPassId" placeholder="Example: 123" />
                             </div>
                             <div class="col-auto my-1">
-                                <button type="submit" class="btn btn-primary">Add</button>
+                                <button
+                                    type="submit"
+                                    class="btn btn-primary"
+                                    :disabled="bypass_saving"
+                                    @click="() => addByPassId()"
+                                >
+                                    Add
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -92,10 +91,24 @@
                         <p class="text-muted">The IDs listed bellow all have access to this feature.</p>
 
                         <ul class="list-group">
-                            <li class="list-group-item justify-content-between d-flex">
-                                <span>ID: 123</span>
+                            <li v-if="!bypassing.bypass_ids || bypassing.bypass_ids.length === 0" class="list-group-item text-center">
+                                No allowed id yet.
+                            </li>
+                            <li
+                                v-if="bypassing.bypass_ids"
+                                class="list-group-item justify-content-between d-flex"
+                                v-for="id in bypassing.bypass_ids"
+                                :key="id"
+                            >
+                                <span>ID: {{ id }}</span>
 
-                                <button class="btn btn-sm">Remove</button>
+                                <button
+                                    class="btn btn-sm"
+                                    :disabled="bypass_saving"
+                                    @click="removeByPassId(id)"
+                                >
+                                    Remove
+                                </button>
                             </li>
                         </ul>
                     </div>
@@ -150,6 +163,8 @@
                 loading: false,
                 flags: [],
                 bypassing: null,
+                bypass_saving: false,
+                newByPassId: '',
                 newFlag: {
                     flag: '',
                     description: '',
@@ -197,11 +212,59 @@
             showByPassConfirmationModal (flag) {
                 this.bypassing = flag;
             },
-            confirmByPassingFlag () {
-                this.bypassing.bypass = !this.bypassing.bypass;
+            addByPassId () {
+                if (!this.bypassing.bypass_ids) {
+                    this.bypassing.bypass_ids = [];
+                }
+
+                this.bypassing.bypass_ids.push(this.newByPassId);
+
+                this.saveByPasses()
+                    .then(() => {
+                        this.newByPassId = '';
+                    });
             },
-            cancelByPassingFlag () {
+            removeByPassId(id) {
+                // In case the request fails, we need the old list.
+                let oldList = this.bypassing.bypass_ids;
+
+                this.bypassing.bypass_ids = this.bypassing.bypass_ids.filter((byPassId) => byPassId !== id);
+
+                this.saveByPasses()
+                    .catch(() => {
+                        this.bypassing.bypass_ids = oldList;
+                    });
+            },
+            saveByPasses () {
+                this.bypass_saving = true;
+
+                return axios
+                    .put('/feature-flags/flags/' + this.bypassing.id, {
+                        bypass_ids: this.bypassing.bypass_ids,
+                    })
+                    .then(({data}) => {
+                        this.bypassing = data;
+                        this.updateFlagInList(data);
+                        this.bypass_saving = false;
+
+                        return data;
+                    })
+                    .catch((error) => {
+                        this.bypass_saving = false;
+                        swal("Whoops! For some reason, we could not add the rule.");
+                        throw error;
+                    });
+            },
+            updateFlagInList (flag) {
+                let index = this.flags.findIndex((f) => f.id === flag.id);
+
+                if (index !== -1) {
+                    this.flags.splice(index, 1, flag);
+                }
+            },
+            hideByPassingModal () {
                 this.bypassing = null;
+                this.bypass_saving = false;
             },
             createFeatureFlag () {
                 axios.post('/feature-flags/flags', this.newFlag)

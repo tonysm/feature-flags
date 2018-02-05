@@ -190,6 +190,7 @@
                             this.sendToggleRequest(flag)
                                 .catch(() => {
                                     flag.value = !flag.value;
+                                    swal("Whoops! For some reason, we could not toggle the feature.");
                                 })
                         } else {
                             flag.value = !flag.value;

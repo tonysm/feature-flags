@@ -38,7 +38,7 @@ class EnabledFlagsController extends Controller
                 'required',
                 Rule::exists('feature_flags', 'id'),
             ],
-            'confirmed' => 'accepted',
+            'confirmation' => 'accepted',
         ]);
 
         $flag = $this->repository->findById($request->feature_flag_id);

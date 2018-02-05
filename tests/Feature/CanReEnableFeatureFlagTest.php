@@ -36,7 +36,7 @@ class CanReEnableFeatureFlagTest extends TestCase
 
         $response = $this->postJson(route('enabled-flags.store'), [
             'feature_flag_id' => $featureFlag->getKey(),
-            'confirmed' => '1',
+            'confirmation' => '1',
         ]);
 
         $response->assertStatus(201);
@@ -68,7 +68,7 @@ class CanReEnableFeatureFlagTest extends TestCase
     {
         $response = $this->postJson(route('enabled-flags.store'), [
             'feature_flag_id' => 123,
-            'confirmed' => '1',
+            'confirmation' => '1',
         ]);
 
         $response->assertStatus(422);

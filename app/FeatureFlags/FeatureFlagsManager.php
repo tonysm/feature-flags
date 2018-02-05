@@ -29,12 +29,17 @@ class FeatureFlagsManager
         $this->featureFlags = $featureFlags;
     }
 
-    public function isEnabledFor(string $feature, User $user = null) : bool
+    public function isEnabled(string $feature)
+    {
+        return $this->isEnabledFor($feature, auth()->user());
+    }
+
+    public function isEnabledFor(string $feature, User $user) : bool
     {
         $this->updateRedisCacheIfMissing($feature);
 
         return $this->redisManager->getCheckerForFlag($feature)
-            ->isValidFor($user ?: auth()->user());
+            ->isValidFor($user);
     }
 
     private function updateRedisCacheIfMissing(string $feature)

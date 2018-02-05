@@ -3,6 +3,7 @@
 namespace App\FeatureFlags\Repositories;
 
 use App\FeatureFlag;
+use App\FeatureFlags\Facades\FeatureFlags;
 use Illuminate\Database\Eloquent\Collection;
 
 class FeatureFlagsEloquentRepository implements FeatureFlagsRepository
@@ -32,6 +33,12 @@ class FeatureFlagsEloquentRepository implements FeatureFlagsRepository
     public function findById($id)
     {
         return FeatureFlag::find($id);
+    }
+
+    public function findByFlag($flag)
+    {
+        return FeatureFlag::where('flag', $flag)
+            ->first();
     }
 
     public function reenable(FeatureFlag $flag)

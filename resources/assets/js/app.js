@@ -9,7 +9,7 @@ Vue.use(BootstrapVue);
 import FeatureFlagsDashboard from './components/FeatureFlagsDashboard';
 
 const app = new Vue({
-    el: '#app',
+    el: '#feature-flags-app',
     render(h) {
         return h(FeatureFlagsDashboard);
     }

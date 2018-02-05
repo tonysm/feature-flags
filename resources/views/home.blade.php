@@ -16,6 +16,23 @@
 
                     You are logged in!
                 </div>
+
+                <div class="card-body">
+                    <div class="list-group">
+                        <div class="list-group-item">
+                            SOMETHING_ELSE:
+                            {{ \App\FeatureFlags\Facades\FeatureFlags::isEnabled('SOMETHING_ELSE') ? 'Enabled' : 'Disabled' }}
+                        </div>
+                        <div class="list-group-item">
+                            SOMETHING_ELSE_EVEN:
+                            {{ \App\FeatureFlags\Facades\FeatureFlags::isEnabled('SOMETHING_ELSE_EVEN') ? 'Enabled' : 'Disabled' }}
+                        </div>
+                        <div class="list-group-item">
+                            MISSING_KEY:
+                            {{ \App\FeatureFlags\Facades\FeatureFlags::isEnabled('MISSING_KEY') ? 'Enabled' : 'Disabled' }}
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
